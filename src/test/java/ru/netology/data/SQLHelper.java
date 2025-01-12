@@ -29,7 +29,7 @@ public class SQLHelper {
     @SneakyThrows
     public static void cleanDatabase() {
         try (var conn = getConn()) {
-            QUERY_RUNNER.execute(conn, "DELETE FROM auth_code");
+            QUERY_RUNNER.execute(conn, "DELETE FROM auth_codes");
             QUERY_RUNNER.execute(conn, "DELETE FROM card_transactions");
             QUERY_RUNNER.execute(conn, "DELETE FROM cards");
             QUERY_RUNNER.execute(conn, "DELETE FROM users");

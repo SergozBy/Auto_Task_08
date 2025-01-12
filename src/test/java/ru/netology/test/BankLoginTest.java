@@ -1,15 +1,11 @@
 package ru.netology.test;
 
-import static com.codeborne.selenide.Selenide.open;
-
 import org.junit.jupiter.api.*;
 import ru.netology.data.DataHelper;
 import ru.netology.data.SQLHelper;
 import ru.netology.page.LoginPage;
-import ru.netology.page.DashboardPage;
-import ru.netology.page.VerificationPage;
 
-import static ru.netology.data.SQLHelper.cleanAuthCodes;
+import static com.codeborne.selenide.Selenide.open;
 import static ru.netology.data.SQLHelper.cleanDatabase;
 
 public class BankLoginTest {
@@ -23,7 +19,7 @@ public class BankLoginTest {
 
     @AfterEach
     void tearDown() {
-        cleanAuthCodes();
+//        cleanAuthCodes();
     }
 
     @BeforeEach
@@ -44,5 +40,16 @@ public class BankLoginTest {
     void shouldGetErrorNotificationIfLoginWithRandomUserWithoutAddingToBase() {
         var authInfo = DataHelper.generateRandomUser();
         loginPage.login(authInfo);
+        loginPage.verifyErrorNotification("Ошибка! \nНеверно указан логин или пароль");
+    }
+
+    @Test
+    @DisplayName("Should get error notification if login with exist in in base and active user and random verification code")
+    void shouldGetErrorNotificationIFLoginWithExistUserAndRandomVerificationCode() {
+        var authInfo = DataHelper.getAuthInfoWithTestData();
+        var verificationPage = loginPage.validLogin(authInfo);
+        var verificationCode = DataHelper.generateRandomVerificationCode();
+        verificationPage.verify(verificationCode.getCode());
+        verificationPage.verifyErrorNotification("Ошибка! \nНеверно указан код! Попробуйте ещё раз.");
     }
 }
